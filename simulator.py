@@ -73,6 +73,29 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
+# --- IT-to-Revenue Ratio Tracker ---
+st.subheader("📉 IT-to-Revenue Ratio Over Time")
+it_spend_by_year = forecast_df.groupby("Year")["Spend"].sum()
+ratios = (it_spend_by_year / revenue).reset_index()
+ratios.columns = ["Year", "IT Spend to Revenue Ratio"]
+
+fig_ratio = go.Figure()
+fig_ratio.add_trace(go.Scatter(
+    x=ratios["Year"],
+    y=ratios["IT Spend to Revenue Ratio"] * 100,
+    mode='lines+markers',
+    name='IT/Revenue %',
+    marker=dict(color='blue')
+))
+fig_ratio.update_layout(
+    title="IT Spend as % of Revenue",
+    xaxis_title="Year",
+    yaxis_title="IT Spend / Revenue (%)",
+    height=400
+)
+
+st.plotly_chart(fig_ratio, use_container_width=True)
+
 # Sensitivity toggle
 st.subheader("🌪️ Sensitivity Analysis")
 if st.checkbox("Run Sensitivity Analysis"):
